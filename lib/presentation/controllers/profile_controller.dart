@@ -9,7 +9,7 @@ class ProfileController extends GetxController {
   UserProfileModel? _userModel;
   UserProfileModel? get userModel => _userModel;
 
-  bool _isLoading = false;
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
 
   Future<void> getUserDataFromFirestore() async {

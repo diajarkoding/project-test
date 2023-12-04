@@ -9,6 +9,7 @@ import 'package:project_test/presentation/pages/widget/custom_button.dart';
 import 'package:project_test/presentation/pages/widget/custom_dropdown.dart';
 import 'package:project_test/presentation/pages/widget/custom_input.dart';
 import 'package:project_test/presentation/pages/widget/loading_button.dart';
+import 'package:project_test/services/province_service.dart';
 import 'package:project_test/utils/format.dart';
 import 'package:project_test/utils/theme.dart';
 
@@ -181,13 +182,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return CustomDropdown(
         title: 'Provinsi',
         icon: 'assets/icon_province.png',
-        items: provinceList,
-        // asyncItems: (p0) async {
-        //   final List<String> provinces =
-        //       await ProvinceService().fetchProvinces();
+        items: const [],
+        asyncItems: (_) async {
+          final List<String> provinces =
+              await ProvinceService().fetchProvinces();
 
-        //   return provinces;
-        // },
+          return provinces;
+        },
         itemAsString: (item) => item,
         onChanged: (value) {
           if (value != null) {

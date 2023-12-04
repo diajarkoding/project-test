@@ -1,10 +1,8 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 
 class ProvinceService {
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'https://www.emsifa.com/api-wilayah-indonesia/api/',
       connectTimeout: const Duration(milliseconds: 100000),
       // receiveTimeout: 100000,
       validateStatus: (status) {
@@ -13,13 +11,14 @@ class ProvinceService {
     ),
   );
 
-  String baseUrl = 'provinces.json';
+  String baseUrl =
+      'https://www.emsifa.com/api-wilayah-indonesia/api//provinces.json';
 
   Future<List<String>> fetchProvinces() async {
     final response = await dio.get(baseUrl);
 
     if (response.statusCode == 200) {
-      final jsonData = json.decode(response.data);
+      final jsonData = response.data;
       final List<String> provinces = [];
 
       for (var province in jsonData) {

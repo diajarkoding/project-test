@@ -26,7 +26,7 @@ class _SplashPageState extends State<SplashPage> {
     final isLogin = hive.getLogin();
 
     await Future.delayed(const Duration(seconds: 3)).then((_) {
-      if (isLogin == true) {
+      if ((isLogin ?? false) == true) {
         Get.offNamed(Routes.dashboardPage);
       } else {
         Get.offNamed(Routes.loginPage);

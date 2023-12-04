@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:project_test/presentation/controllers/dashboard_controller.dart';
 import 'package:project_test/presentation/controllers/profile_controller.dart';
 import 'package:project_test/presentation/pages/dashboard/home_page.dart';
+import 'package:project_test/presentation/pages/dashboard/profile_page.dart';
 import 'package:project_test/utils/theme.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -34,63 +35,55 @@ class _DashboardPageState extends State<DashboardPage> {
       return ClipRRect(
         borderRadius:
             const BorderRadius.vertical(top: Radius.circular(defaultMargin)),
-        child: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 12,
-          clipBehavior: Clip.antiAlias,
-          child: BottomNavigationBar(
-            backgroundColor: backgroudColor4,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            currentIndex: dashboard.currentIndex,
-            onTap: (value) {
-              setState(() {
-                dashboard.currentIndex = value;
-              });
-            },
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(
-                  icon: Container(
-                    margin: const EdgeInsets.only(top: 15, bottom: 15),
-                    child: Image.asset(
-                      'assets/icon_home.png',
-                      width: 21,
-                      color: dashboard.currentIndex == 0
-                          ? primaryColor
-                          : const Color(0xff808191),
-                    ),
+        child: BottomNavigationBar(
+          backgroundColor: backgroudColor4,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: dashboard.currentIndex,
+          onTap: (value) {
+            setState(() {
+              dashboard.currentIndex = value;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Image.asset(
+                    'assets/icon_home.png',
+                    width: 21,
+                    color: dashboard.currentIndex == 0
+                        ? primaryColor
+                        : const Color(0xff808191),
                   ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  icon: Container(
-                    margin: const EdgeInsets.only(top: 15, bottom: 15),
-                    child: Image.asset(
-                      'assets/icon_favorite.png',
-                      width: 20,
-                      color: dashboard.currentIndex == 1
-                          ? primaryColor
-                          : const Color(0xff808191),
-                    ),
+                ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Image.asset(
+                    'assets/icon_favorite.png',
+                    width: 20,
+                    color: dashboard.currentIndex == 1
+                        ? primaryColor
+                        : const Color(0xff808191),
                   ),
-                  label: ''),
-              BottomNavigationBarItem(
-                  icon: Container(
-                    margin: const EdgeInsets.only(
-                      top: 15,
-                      bottom: 15,
-                    ),
-                    child: Image.asset(
-                      'assets/icon_profile.png',
-                      width: 18,
-                      color: dashboard.currentIndex == 2
-                          ? primaryColor
-                          : const Color(0xff808191),
-                    ),
+                ),
+                label: ''),
+            BottomNavigationBarItem(
+                icon: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Image.asset(
+                    'assets/icon_profile.png',
+                    width: 18,
+                    color: dashboard.currentIndex == 2
+                        ? primaryColor
+                        : const Color(0xff808191),
                   ),
-                  label: ''),
-            ],
-          ),
+                ),
+                label: ''),
+          ],
         ),
       );
     }
@@ -102,7 +95,7 @@ class _DashboardPageState extends State<DashboardPage> {
         case 1:
           return const HomePage();
         case 2:
-          return const HomePage();
+          return const ProfilePage();
 
         default:
           return const HomePage();

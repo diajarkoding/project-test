@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
       return Container(
         margin: const EdgeInsets.only(
             top: defaultMargin, left: defaultMargin, right: defaultMargin),
-        child: GetBuilder(
+        child: GetBuilder<ProfileController>(
           init: Get.find<ProfileController>(),
           builder: (profile) {
             return Row(
