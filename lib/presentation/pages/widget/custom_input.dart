@@ -10,6 +10,7 @@ class CustomInput extends StatelessWidget {
     required this.hintText,
     this.marginTop = 20,
     this.obscureText = false,
+    this.validator,
   });
 
   final TextEditingController usernameController;
@@ -18,6 +19,7 @@ class CustomInput extends StatelessWidget {
   final String hintText;
   final double marginTop;
   final bool obscureText;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -33,38 +35,39 @@ class CustomInput extends StatelessWidget {
           const SizedBox(
             height: 12,
           ),
-          Container(
-            width: double.infinity,
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: backgroudColor2,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Row(
-                children: [
-                  Image.asset(
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: backgroudColor2,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Image.asset(
                     icon,
                     width: 17,
                   ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      style: primaryTextStyle,
-                      controller: usernameController,
-                      obscureText: obscureText,
-                      decoration: InputDecoration.collapsed(
-                        hintText: hintText,
-                        hintStyle: subtitleTextStyle,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.only(left: 48),
+                child: TextFormField(
+                  style: primaryTextStyle,
+                  controller: usernameController,
+                  obscureText: obscureText,
+                  validator: validator,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hintText,
+                    hintStyle: subtitleTextStyle,
+                  ),
+                ),
+              )
+            ],
           ),
         ],
       ),

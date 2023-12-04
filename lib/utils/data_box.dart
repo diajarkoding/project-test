@@ -47,16 +47,14 @@ class HiveDataStore {
     final isLoginBox = Hive.box(secureBoxName);
     if ((isLogin ?? false)) {
       isLoginBox.put(isLoginKey, isLogin);
-      debugPrint('=== store isLogin success ===');
+      debugPrint('=== store isLogin ($isLogin) success ===');
     }
   }
 
   bool? getLogin() {
     final isLoginBox = Hive.box(secureBoxName);
     final bool? isLogin = isLoginBox.get(isLoginKey);
-    if ((isLogin ?? false)) {
-      return false;
-    }
+    debugPrint('=== get isLogin ($isLogin) success ===');
     return isLogin;
   }
 

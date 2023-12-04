@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 class ProvinceService {
   final dio = Dio(
     BaseOptions(
+      baseUrl: 'https://www.emsifa.com/api-wilayah-indonesia/api/',
       connectTimeout: const Duration(milliseconds: 100000),
       // receiveTimeout: 100000,
       validateStatus: (status) {
@@ -12,8 +13,7 @@ class ProvinceService {
     ),
   );
 
-  String baseUrl =
-      'https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json';
+  String baseUrl = 'provinces.json';
 
   Future<List<String>> fetchProvinces() async {
     final response = await dio.get(baseUrl);

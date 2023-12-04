@@ -3,52 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_test/presentation/pages/widget/error_dialog.dart';
+import 'package:project_test/routes/route_name.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:project_test/utils/data_box.dart';
-import 'package:project_test/utils/theme.dart';
 
 class AuthController extends GetxController {
-  String? selectProvince;
-  List<String> provinceList = ['Jawa Barat', 'Jakarta', 'Lainnya'];
-
-  List<String> genderList = ['Laki-laki', 'Perempuan', 'Lainnya'];
-  String? selectedGender;
-
-  Rx<bool> _isLoading = false.obs;
-  Rx<bool> get isLoading => _isLoading;
-
-  Rx<DateTime>? _selectedDate;
-  Rx<DateTime>? get selectedDate => _selectedDate;
-
-  final _picker = ImagePicker();
-
   final _hive = HiveDataStore();
 
-  Rx<File>? _image;
-  Rx<File>? get image => _image;
-
-  Future<void> openDatePicker(BuildContext context) async {
-    final initialDate = DateTime.now();
-    final pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: initialDate,
-    );
-
-    if (pickedDate != null) {
-      _selectedDate!.value = pickedDate;
-    }
-  }
-
-  Future<void> getImageFromCamera() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-
-    if (pickedFile != null) {
-      _image!.value = File(pickedFile.path);
-    }
-  }
+  final RxBool _isLoading = false.obs;
+  RxBool get isLoading => _isLoading;
 
   Future<String> _uploadImageToFirebase(File? image) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -64,12 +28,18 @@ class AuthController extends GetxController {
     required String fullName,
     required String email,
     required String password,
+    String? gender,
+    String? province,
+    DateTime? birthDate,
+    File? image,
     required BuildContext context,
   }) async {
+    FocusScope.of(context).unfocus();
+
     _isLoading.value = true;
 
     try {
-      String imageUrl = await _uploadImageToFirebase(image!.value);
+      String imageUrl = await _uploadImageToFirebase(image);
 
       UserCredential userCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -82,17 +52,15 @@ class AuthController extends GetxController {
       await FirebaseFirestore.instance.collection('users').doc(userId).set({
         'full_name': fullName,
         'email': email,
-        'gender': selectedGender,
-        'birth_date': selectedDate,
-        'province': selectProvince,
+        'gender': gender,
+        'birth_date': birthDate,
+        'province': province,
         'profile_photo': imageUrl,
       });
 
       _isLoading.value = false;
 
-      if (context.mounted) {
-        Navigator.pushNamed(context, '/signin');
-      }
+      Get.offAllNamed(Routes.loginPage);
     } catch (e) {
       _isLoading.value = false;
 
@@ -102,46 +70,7 @@ class AuthController extends GetxController {
         errorMessage = e.message!;
       }
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: backgroudColor3,
-              title: Text(
-                'Error',
-                style: primaryTextStyle,
-              ),
-              content: Text(
-                errorMessage,
-                style: primaryTextStyle,
-              ),
-              actions: [
-                Container(
-                  width: double.infinity,
-                  height: 44,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'OK',
-                      style: primaryTextStyle.copyWith(
-                          fontSize: 16, fontWeight: medium),
-                    ),
-                  ),
-                )
-              ],
-            );
-          },
-        );
+        errorDialog(context, errorMessage);
       }
     }
   }
@@ -151,6 +80,8 @@ class AuthController extends GetxController {
     required String password,
     required BuildContext context,
   }) async {
+    FocusScope.of(context).unfocus();
+
     _isLoading.value = true;
 
     try {
@@ -166,11 +97,9 @@ class AuthController extends GetxController {
 
       _hive.saveLogin(true);
 
-      _isLoading.value = false;
+      Get.offNamed(Routes.dashboardPage);
 
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      }
+      _isLoading.value = false;
     } catch (e) {
       _isLoading.value = false;
 
@@ -180,57 +109,16 @@ class AuthController extends GetxController {
         errorMessage = e.message!;
       }
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: backgroudColor3,
-              title: Text(
-                'Error',
-                style: primaryTextStyle,
-              ),
-              content: Text(
-                errorMessage,
-                style: primaryTextStyle,
-              ),
-              actions: [
-                Container(
-                  width: double.infinity,
-                  height: 44,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'OK',
-                      style: primaryTextStyle.copyWith(
-                          fontSize: 16, fontWeight: medium),
-                    ),
-                  ),
-                )
-              ],
-            );
-          },
-        );
+        errorDialog(context, errorMessage);
       }
     }
   }
 
-  Future<void> logout(BuildContext context) async {
+  Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
 
     _hive.clearLogin();
 
-    if (context.mounted) {
-      Navigator.pushReplacementNamed(context, '/signin');
-    }
+    Get.offNamed(Routes.loginPage);
   }
 }
