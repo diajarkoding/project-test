@@ -7,9 +7,11 @@ class HiveDataStore {
   static const boxName = 'initBox';
   static const keyName = 'isFirstInstall';
   static const secureBoxName = 'projectTestSecureBox';
+  static const favoriteBox = 'userFavorite';
   static const secureKeyName = 'projectTestSecureKey';
   static const userIdKey = 'user_id';
   static const isLoginKey = 'login_key';
+  static const favoriteKey = 'favorite_key';
 
   Future<void> init() async {
     await Hive.initFlutter();

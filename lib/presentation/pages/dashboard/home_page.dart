@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_test/presentation/controllers/profile_controller.dart';
+import 'package:project_test/presentation/controllers/users_controller.dart';
+import 'package:project_test/presentation/pages/widget/users_card.dart';
 
 import 'package:project_test/utils/theme.dart';
 
@@ -13,9 +15,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  getUsers() {
+    final users = Get.put(UsersController());
+    users.getUserDataFromFirestore();
+  }
+
   @override
   void initState() {
     super.initState();
+    Future.microtask(() => getUsers());
   }
 
   List<String> roles = [
@@ -117,6 +125,38 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    Widget usersCard() {
+      return Container(
+        margin: const EdgeInsets.only(top: 100, left: 24, right: 24),
+        child: GetBuilder<UsersController>(
+          init: Get.put(UsersController()),
+          builder: (data) {
+            if (data.isLoading == true) {
+              return const Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Center(
+                  child: CircularProgressIndicator(
+                    color: backgroudColor6,
+                  ),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: data.usersModel!.length,
+                itemBuilder: (context, index) {
+                  final hero = data.usersModel![index];
+                  return UsersCard(
+                    users: hero,
+                  );
+                },
+              );
+            }
+          },
+        ),
+      );
+    }
+
     return SafeArea(
       child: Stack(
         children: [
@@ -126,6 +166,7 @@ class _HomePageState extends State<HomePage> {
               header(),
             ],
           ),
+          usersCard()
         ],
       ),
     );

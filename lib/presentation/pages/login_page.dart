@@ -48,6 +48,7 @@ class _LoginPageState extends State<LoginPage> {
   login() {
     final loginFormState = _formKey.currentState!;
     final auth = Get.find<AuthController>();
+    FocusScope.of(context).unfocus();
     if (loginFormState.validate()) {
       auth.loginUser(
         email: emailController.text,

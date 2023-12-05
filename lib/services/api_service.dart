@@ -1,40 +1,31 @@
 import 'package:dio/dio.dart';
+import 'package:project_test/model/users_model.dart';
 
 class ApiService {
   final dio = Dio(
     BaseOptions(
       baseUrl: 'https://reqres.in/',
       connectTimeout: const Duration(milliseconds: 100000),
-      // receiveTimeout: 100000,
       validateStatus: (status) {
         return status != null && status > 0;
       },
     ),
   );
 
-  Future<void> register(
-      {required String email, required String password}) async {
-    try {
-      const String url = "api/register";
+  Future<List<UsersModel>> getUsers(int page) async {
+    final response = await dio.get('/api/users?page=$page');
 
-      final Map<String, dynamic> data = {
-        "email": email,
-        "password": password,
-      };
+    if (response.statusCode == 200) {
+      final jsonData = response.data;
 
-      final response = await dio.post(
-        url,
-        data: data,
-        options: Options(
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        ),
-      );
+      final List<dynamic> dataList = jsonData['data'] as List<dynamic>;
 
-      print("Response: ${response.data}");
-    } catch (e) {
-      print("Error: $e");
+      final userList =
+          dataList.map((item) => UsersModel.fromJSON(item)).toList();
+
+      return userList;
+    } else {
+      throw Exception('Failed to fetch users');
     }
   }
 }

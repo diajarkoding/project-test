@@ -63,21 +63,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 icon: Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Image.asset(
-                    'assets/icon_favorite.png',
-                    width: 20,
-                    color: dashboard.currentIndex == 1
-                        ? primaryColor
-                        : const Color(0xff808191),
-                  ),
-                ),
-                label: ''),
-            BottomNavigationBarItem(
-                icon: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: Image.asset(
                     'assets/icon_profile.png',
                     width: 18,
-                    color: dashboard.currentIndex == 2
+                    color: dashboard.currentIndex == 1
                         ? primaryColor
                         : const Color(0xff808191),
                   ),
@@ -92,9 +80,8 @@ class _DashboardPageState extends State<DashboardPage> {
       switch (dashboard.currentIndex) {
         case 0:
           return const HomePage();
+
         case 1:
-          return const HomePage();
-        case 2:
           return const ProfilePage();
 
         default:

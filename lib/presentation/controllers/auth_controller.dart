@@ -7,6 +7,7 @@ import 'package:project_test/presentation/pages/widget/error_dialog.dart';
 import 'package:project_test/routes/route_name.dart';
 import 'dart:io';
 import 'package:project_test/utils/data_box.dart';
+import 'package:project_test/utils/theme.dart';
 
 class AuthController extends GetxController {
   final _hive = HiveDataStore();
@@ -34,8 +35,6 @@ class AuthController extends GetxController {
     File? image,
     required BuildContext context,
   }) async {
-    FocusScope.of(context).unfocus();
-
     _isLoading.value = true;
 
     try {
@@ -58,9 +57,21 @@ class AuthController extends GetxController {
         'profile_photo': imageUrl,
       });
 
-      _isLoading.value = false;
-
       Get.offAllNamed(Routes.loginPage);
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: secondaryColor,
+            content: Text(
+              'Akun berhasil didaftarkan',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+
+        _isLoading.value = false;
+      }
     } catch (e) {
       _isLoading.value = false;
 
@@ -80,8 +91,6 @@ class AuthController extends GetxController {
     required String password,
     required BuildContext context,
   }) async {
-    FocusScope.of(context).unfocus();
-
     _isLoading.value = true;
 
     try {

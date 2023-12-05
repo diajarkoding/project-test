@@ -4,7 +4,6 @@ class ProvinceService {
   final dio = Dio(
     BaseOptions(
       connectTimeout: const Duration(milliseconds: 100000),
-      // receiveTimeout: 100000,
       validateStatus: (status) {
         return status != null && status > 0;
       },

@@ -99,6 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
   register() {
     final loginFormState = _formKey.currentState!;
     final auth = Get.find<AuthController>();
+    FocusScope.of(context).unfocus();
     if (loginFormState.validate()) {
       auth.registerUser(
         fullName: nameController.text,
